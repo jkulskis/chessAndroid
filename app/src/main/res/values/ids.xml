@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="p1Move" type="id" />
+    <item name="p2Move" type="id" />
+    <item name="displayBoard" type="id" />
+</resources>
