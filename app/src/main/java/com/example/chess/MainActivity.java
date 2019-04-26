@@ -52,12 +52,13 @@ public class MainActivity extends Activity implements View.OnClickListener {
             }
 
             case R.id.p2Move: {
-
                 break;
             }
 
             case R.id.displayBoard: {
-
+                Board b = new Board();
+                System.out.println(b.toString());
+                System.out.println(b.tiles[0][3].getPossibleMoves(b));
                 break;
             }
         }
