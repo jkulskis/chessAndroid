@@ -7,40 +7,62 @@
 
     <TextView
         android:id="@+id/mainText"
-        android:text="Chess Backend"
-        android:textSize="30sp"
+        android:text="Game Not Yet Started"
+        android:textSize="20sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         />
+
+    <EditText
+        android:id="@+id/TextBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:layout_below="@+id/mainText" >
+
+        <requestFocus />
+    </EditText>
+
     <Button
         android:id="@+id/startGame"
         android:text="New Game"
+        android:textSize="12sp"
+        android:layout_height="35dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/mainText"
+        android:layout_below="@+id/TextBox"
         />
+
     <Button
-        android:id="@+id/p1Move"
-        android:text="P1 Move"
+        android:id="@+id/pMove"
+        android:text="Move"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:layout_height="35dp"
         android:layout_below="@+id/startGame"
         />
+
     <Button
-        android:id="@+id/p2Move"
-        android:text="P2 Move"
+        android:id="@+id/launchGame"
+        android:text="Launch Game Activity"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/p1Move"
+        android:textSize="12sp"
+        android:layout_height="35dp"
+        android:layout_below="@+id/displayPossibleMoves"
         />
+
     <Button
-        android:id="@+id/displayBoard"
-        android:text="Display Board"
+        android:id="@+id/displayPossibleMoves"
+        android:text="Display Possible Moves"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/p2Move"
+        android:textSize="12sp"
+        android:layout_height="35dp"
+        android:layout_below="@+id/pMove"
         />
+
     <TextView
         android:id="@+id/console"
         android:text="#####"
@@ -48,8 +70,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/displayBoard"
-        android:padding="20dp"
+        android:layout_below="@+id/launchGame"
+        android:padding="10dp"
         />
 
 </RelativeLayout>

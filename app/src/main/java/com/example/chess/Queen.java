@@ -1,25 +1,18 @@
 package com.example.chess;
 
 public class Queen extends Piece {
-    public Queen(int player, int row, int col) {
-        super(player, "com.example.chess.Queen", 9, row, col);
+    public Queen(Player player, int row, int col) {
+        super(player, "Queen", 9, row, col);
     }
 
-    public int[][] getPossibleMoves(Board b) {
-        int[][] possibleMoves = new int[b.bHeight][b.bWidth];
-        possibleMoves = get_vert_moves(b, possibleMoves);
-        possibleMoves = get_horiz_moves(b, possibleMoves);
-        possibleMoves = get_diag_moves(b, possibleMoves);
-        return possibleMoves;
-    }
-
-    public int[][] get_vert_moves(Board b, int[][] possibleMoves) {
+    public int[][] get_vert_moves(Board b, int[][] possibleMoves, boolean killAll) {
         for (int r = row + 1; r < b.bHeight; r++) {
             if (b.tiles[r][col].value == 0) {
                 possibleMoves[r][col] = 1;
             }
             else if (b.tiles[r][col].value > 0) {
-                possibleMoves[r][col] = 1;
+                if (b.tiles[r][col].player == player.getEnemy() || killAll)
+                    possibleMoves[r][col] = 2;
                 break;
             }
         }
@@ -28,103 +21,107 @@ public class Queen extends Piece {
                 possibleMoves[r][col] = 1;
             }
             else if (b.tiles[r][col].value > 0) {
-                possibleMoves[r][col] = 1;
+                if (b.tiles[r][col].player == player.getEnemy() || killAll)
+                    possibleMoves[r][col] = 2;
                 break;
             }
         }
         return possibleMoves;
     }
 
-    public int[][] get_horiz_moves(Board b, int[][] possibleMoves) {
+    public int[][] get_horiz_moves(Board b, int[][] possibleMoves, boolean killAll) {
         for (int c = col + 1; c < b.bWidth; c++) {
             if (b.tiles[row][c].value == 0) {
                 possibleMoves[row][c] = 1;
             }
             else if (b.tiles[row][c].value > 0) {
-                possibleMoves[row][c] = 1;
+                if (b.tiles[row][c].player == player.getEnemy() || killAll)
+                    possibleMoves[row][c] = 2;
                 break;
             }
         }
-        for (int c = col - 1; c < b.bWidth; c++) {
+        for (int c = col - 1; c >= 0; c--) {
             if (b.tiles[row][c].value == 0) {
                 possibleMoves[row][c] = 1;
             }
             else if (b.tiles[row][c].value > 0) {
-                possibleMoves[row][c] = 1;
+                if (b.tiles[row][c].player == player.getEnemy() || killAll)
+                    possibleMoves[row][c] = 2;
                 break;
             }
         }
         return possibleMoves;
     }
 
-    public int[][] get_diag_moves(Board b, int[][] possibleMoves) {
-        int c = b.bWidth + 1;
-        int r = b.bHeight + 1;
+    public int[][] get_diag_moves(Board b, int[][] possibleMoves, boolean killAll) {
+        // Up + Right Diagonal Moves
+        int c = col + 1;
+        int r = row + 1;
 
         while(c < b.bWidth && r < b.bHeight) {
             if (b.tiles[r][c].value == 0) {
-                possibleMoves[row][c] = 1;
+                possibleMoves[r][c] = 1;
             }
             else if (b.tiles[r][c].value > 0) {
-                possibleMoves[row][c] = 1;
+                if (b.tiles[r][c].player == player.getEnemy() || killAll)
+                    possibleMoves[r][c] = 2;
                 break;
             }
-        }
-        c = b.bWidth - 1;
-        r = b.bHeight + 1;
-
-        while(c > 0 && r < b.bHeight) {
-            if (b.tiles[r][c].value == 0) {
-                possibleMoves[row][c] = 1;
-            }
-            else if (b.tiles[r][c].value > 0) {
-                possibleMoves[row][c] = 1;
-                break;
-            }
+            r++;
+            c++;
         }
 
-        c = b.bWidth + 1;
-        r = b.bHeight - 1;
+        // Up + Left Diagonal Moves
+        c = col - 1;
+        r = row + 1;
 
-        while(c < b.bWidth && r > 0) {
+        while(c >= 0 && r < b.bHeight) {
             if (b.tiles[r][c].value == 0) {
-                possibleMoves[row][c] = 1;
+
+                possibleMoves[r][c] = 1;
             }
             else if (b.tiles[r][c].value > 0) {
-                possibleMoves[row][c] = 1;
+                if (b.tiles[r][c].player == player.getEnemy() || killAll)
+                    possibleMoves[r][c] = 2;
                 break;
             }
+            r++;
+            c--;
         }
 
-        c = b.bWidth - 1;
-        r = b.bHeight - 1;
+        // Down + Right Diagonal Moves
+        c = col + 1;
+        r = row - 1;
 
-        while(c < 0 && r > 0) {
+        while(c < b.bWidth && r >= 0) {
             if (b.tiles[r][c].value == 0) {
-                possibleMoves[row][c] = 1;
+                possibleMoves[r][c] = 1;
             }
             else if (b.tiles[r][c].value > 0) {
-                possibleMoves[row][c] = 1;
+                if (b.tiles[r][c].player == player.getEnemy() || killAll)
+                    possibleMoves[r][c] = 2;
                 break;
             }
+            r--;
+            c++;
+        }
+
+        // Down + Left Diagonal Moves
+        c = col - 1;
+        r = row - 1;
+
+        while(c >= 0 && r >= 0) {
+            if (b.tiles[r][c].value == 0) {
+                possibleMoves[r][c] = 1;
+            }
+            else if (b.tiles[r][c].value > 0) {
+                if (b.tiles[r][c].player == player.getEnemy() || killAll)
+                    possibleMoves[r][c] = 2;
+                break;
+            }
+            r--;
+            c--;
         }
         return possibleMoves;
-    }
-
-    public String movesToString(Board b) {
-        int[][] arrayToPrint = getPossibleMoves(b);
-        String s = "";
-
-        for (int r = 0; r < b.bHeight; r++) {
-            s += "|";
-
-            for (int c = 0; c < b.bWidth; c++) {
-                s += (int) arrayToPrint[r][c] + "|";
-            }
-            s += "\n";
-        }
-        s += "\n------------------\n";
-        s+= " 0 1 2 3 4 5 6 7 8";
-        return s;
     }
 }
