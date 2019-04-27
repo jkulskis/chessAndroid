@@ -54,10 +54,10 @@ public class MyCanvas extends View {
         drawCheckeredTiles(canvas);
         // If checked, draw a pink square where the current player king is
         if (g.currentPlayer.checkmated) {
-            drawRedCheckMateSquare(canvas);
+            fillKingSquare(canvas, true);
         }
         else if (g.currentPlayer.checked) {
-            drawPinkCheckSquare(canvas);
+            fillKingSquare(canvas, false);
         }
 
         drawSelectedMoves(canvas);
@@ -99,23 +99,16 @@ public class MyCanvas extends View {
         drawDeadPieces(g.p1, g.p1.deadPieces, canvas);
     }
 
-    public void drawPinkCheckSquare(Canvas canvas) {
+    // if checkmate == true, then draw a red square ... otherwise draw a pink square (for check)
+    public void fillKingSquare(Canvas canvas, boolean checkmate) {
         for (int i = 0; i < g.currentPlayer.alivePieces.size(); i++) {
             if (g.currentPlayer.alivePieces.get(i).type.equals("King")) {
-                paint.setColor(Color.rgb(253, 131, 208));
-                RectF rect = new RectF(tileSideLength * g.currentPlayer.alivePieces.get(i).col,verticalPadding + g.currentPlayer.alivePieces.get(i).row,
-                        tileSideLength*(g.currentPlayer.alivePieces.get(i).col+1),verticalPadding + tileSideLength*(g.currentPlayer.alivePieces.get(i).row+1));
-                canvas.drawRect(rect, paint);
-            }
-        }
-    }
-
-    public void drawRedCheckMateSquare(Canvas canvas) {
-        for (int i = 0; i < g.currentPlayer.alivePieces.size(); i++) {
-            if (g.currentPlayer.alivePieces.get(i).type.equals("King")) {
-                paint.setColor(Color.rgb(255, 0, 0));
-                RectF rect = new RectF(tileSideLength * g.currentPlayer.alivePieces.get(i).col,verticalPadding + g.currentPlayer.alivePieces.get(i).row,
-                        tileSideLength*(g.currentPlayer.alivePieces.get(i).col+1),verticalPadding + tileSideLength*(g.currentPlayer.alivePieces.get(i).row+1));
+                if (checkmate)
+                    paint.setColor(Color.rgb(255, 0, 0));
+                else
+                    paint.setColor(Color.rgb(225, 135, 174));
+                RectF rect = new RectF(tileSideLength * g.currentPlayer.alivePieces.get(i).col, verticalPadding + g.currentPlayer.alivePieces.get(i).row * tileSideLength,
+                        tileSideLength * (g.currentPlayer.alivePieces.get(i).col + 1), verticalPadding + tileSideLength * (g.currentPlayer.alivePieces.get(i).row + 1));
                 canvas.drawRect(rect, paint);
             }
         }
