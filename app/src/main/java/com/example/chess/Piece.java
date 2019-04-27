@@ -99,7 +99,7 @@ public abstract class Piece {
                 kingCol = player.alivePieces.get(i).col;
             }
         }
-        possibleMoves = get_diag_moves(b, get_horiz_moves(b, get_vert_moves(b, possibleMoves, false), false), false);
+        possibleMoves = get_diag_moves(b, get_horiz_moves(b, get_vert_moves(b, possibleMoves, killAll), killAll), killAll);
         // Only run through the king check if killAll is false, otherwise there will be an infinite loop
         if (!killAll) {
             for (int r = 0; r < b.bHeight; r++) {
@@ -107,9 +107,11 @@ public abstract class Piece {
                     if (possibleMoves[r][c] != 0) {
                         Piece oldPiece = b.tiles[r][c];
                         b.tiles[r][c] = this;
+                        b.tiles[row][col] = new Tile(r, c);
                         if (player.findDangerZone(b)[kingRow][kingCol] != 0) {
                             possibleMoves[r][c] = 0;
                         }
+                        b.tiles[row][col] = this;
                         b.tiles[r][c] = oldPiece;
                     }
                 }

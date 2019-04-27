@@ -83,7 +83,7 @@ public class Game {
 
     // check to see if the click is a valid move for the selected piece
     public boolean checkSelectMove(int row, int col) {
-        if (b.selected == null)
+        if (row == -1 || b.selected == null)
             return false;
         int[][] possibleMoves = getSelectedMoves();
         if (possibleMoves[row][col] != 0)

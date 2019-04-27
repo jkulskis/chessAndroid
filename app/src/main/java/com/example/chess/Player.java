@@ -75,32 +75,43 @@ public class Player {
     public int[][] findDangerZone(Board b) {
         int[][] dangerZone = new int[b.bHeight][b.bWidth];
 
-        for (int i = 0; i < enemy.alivePieces.size(); i++) {
-            dangerZone = enemy.alivePieces.get(i).getKillZone(b, dangerZone);
+        for (int r = 0; r < b.bHeight; r++) {
+            for (int c = 0; c < b.bWidth; c++) {
+                if (b.tiles[r][c].player == this.enemy)
+                    dangerZone = b.tiles[r][c].getKillZone(b, dangerZone);
+            }
         }
 
         return dangerZone;
     }
 
-    public int[][] getAllPossibleMoves(Board b) {
+    // If can't move anywhere ----> is checkmated
+    public boolean checkMated(Board b) {
         int[][] allPossibleMoves = new int[b.bHeight][b.bWidth];
 
         for (int i = 0; i < alivePieces.size(); i++) {
             allPossibleMoves = alivePieces.get(i).getPossibleMoves(b, false, allPossibleMoves);
-        }
-        return allPossibleMoves;
-    }
-
-    // If can't move anywhere ----> is checkmated
-    public boolean checkMated(Board b) {
-        int[][] checkMoves = getAllPossibleMoves(b);
-        for (int r = 0; r < b.bHeight; r++) {
-            for (int c = 0; c < b.bWidth; c++) {
-                if (checkMoves[r][c] != 0) {
-                    return false;
+            for (int r = 0; r < b.bHeight; r++) {
+                for (int c = 0; c < b.bHeight; c++){
+                    if (allPossibleMoves[r][c] != 0)
+                        return false;
                 }
             }
         }
+        int[][] arrayToPrint = allPossibleMoves;
+        String s = "";
+
+        for (int r = 0; r < b.bHeight; r++) {
+            s += r + " |";
+
+            for (int c = 0; c < b.bWidth; c++) {
+                s += (int) arrayToPrint[r][c] + "|";
+            }
+            s += "\n";
+        }
+        s += "---------------------------\n";
+        s+= "   0 1 2 3 4 5 6 7";
+        System.out.println(s);
         // If got all the way here, must mean that no possible moves
         // so checkmate is true
         return true;

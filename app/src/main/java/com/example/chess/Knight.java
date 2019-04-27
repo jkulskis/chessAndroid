@@ -8,7 +8,37 @@ public class Knight extends Piece {
 
     @Override
     public int[][] getPossibleMoves(Board b, boolean killAll, int[][] possibleMoves) {
-        return get_L_moves(b, possibleMoves, killAll);
+        // If player is checked, then we need to check if there are any "block" tiles
+        // to block the check
+
+        // find where the king is
+        int kingRow = 0;
+        int kingCol = 0;
+        for (int i = 0; i < player.alivePieces.size(); i++) {
+            if (player.alivePieces.get(i).type.equals("King")) {
+                kingRow = player.alivePieces.get(i).row;
+                kingCol = player.alivePieces.get(i).col;
+            }
+        }
+        possibleMoves = get_L_moves(b, possibleMoves, killAll);
+
+        if (!killAll) {
+            for (int r = 0; r < b.bHeight; r++) {
+                for (int c = 0; c < b.bWidth; c++) {
+                    if (possibleMoves[r][c] != 0) {
+                        Piece oldPiece = b.tiles[r][c];
+                        b.tiles[r][c] = this;
+                        b.tiles[row][col] = new Tile(r, c);
+                        if (player.findDangerZone(b)[kingRow][kingCol] != 0) {
+                            possibleMoves[r][c] = 0;
+                        }
+                        b.tiles[row][col] = this;
+                        b.tiles[r][c] = oldPiece;
+                    }
+                }
+            }
+        }
+        return possibleMoves;
     }
 
     @Override

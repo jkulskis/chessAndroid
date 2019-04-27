@@ -54,8 +54,8 @@ public class Board {
 
                 // Pawns
                 else if (r == 6) {
-                    //tiles[r][c] = new Pawn(p1, r, c);
-                    tiles[r][c] = new Tile(r,c);
+                    tiles[r][c] = new Pawn(p1, r, c);
+                    //tiles[r][c] = new Tile(r,c);
                 }
                 // All Other P1 pieces
                 else if (r == 7) {

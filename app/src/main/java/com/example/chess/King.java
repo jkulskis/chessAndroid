@@ -20,6 +20,24 @@ public class King extends Piece {
                     possibleMoves[r][c] = 0;
             }
         }
+
+        if (!killAll) {
+            for (int r = 0; r < b.bHeight; r++) {
+                for (int c = 0; c < b.bWidth; c++) {
+                    if (possibleMoves[r][c] != 0) {
+                        Piece oldPiece = b.tiles[r][c];
+                        b.tiles[r][c] = this;
+                        b.tiles[row][col] = new Tile(r, c);
+                        if (player.findDangerZone(b)[r][c] != 0) {
+                            possibleMoves[r][c] = 0;
+                        }
+                        b.tiles[row][col] = this;
+                        b.tiles[r][c] = oldPiece;
+                    }
+                }
+            }
+        }
+
         possibleMoves = check_castling(b, possibleMoves);
 
         return possibleMoves;
