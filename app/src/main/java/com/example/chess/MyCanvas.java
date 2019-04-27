@@ -51,8 +51,12 @@ public class MyCanvas extends View {
         super.onDraw(canvas);
         configurePaint();
 
+        drawCheckeredTiles(canvas);
         // If checked, draw a pink square where the current player king is
-        if (g.currentPlayer.checked) {
+        if (g.currentPlayer.checkmated) {
+            drawRedCheckMateSquare(canvas);
+        }
+        else if (g.currentPlayer.checked) {
             drawPinkCheckSquare(canvas);
         }
 
@@ -98,13 +102,25 @@ public class MyCanvas extends View {
     public void drawPinkCheckSquare(Canvas canvas) {
         for (int i = 0; i < g.currentPlayer.alivePieces.size(); i++) {
             if (g.currentPlayer.alivePieces.get(i).type.equals("King")) {
-                paint.setColor(Color.rgb(255, 192, 203));
+                paint.setColor(Color.rgb(253, 131, 208));
                 RectF rect = new RectF(tileSideLength * g.currentPlayer.alivePieces.get(i).col,verticalPadding + g.currentPlayer.alivePieces.get(i).row,
                         tileSideLength*(g.currentPlayer.alivePieces.get(i).col+1),verticalPadding + tileSideLength*(g.currentPlayer.alivePieces.get(i).row+1));
                 canvas.drawRect(rect, paint);
             }
         }
     }
+
+    public void drawRedCheckMateSquare(Canvas canvas) {
+        for (int i = 0; i < g.currentPlayer.alivePieces.size(); i++) {
+            if (g.currentPlayer.alivePieces.get(i).type.equals("King")) {
+                paint.setColor(Color.rgb(255, 0, 0));
+                RectF rect = new RectF(tileSideLength * g.currentPlayer.alivePieces.get(i).col,verticalPadding + g.currentPlayer.alivePieces.get(i).row,
+                        tileSideLength*(g.currentPlayer.alivePieces.get(i).col+1),verticalPadding + tileSideLength*(g.currentPlayer.alivePieces.get(i).row+1));
+                canvas.drawRect(rect, paint);
+            }
+        }
+    }
+
     public void drawAlivePiece(Piece p, Canvas canvas) {
         RectF rect;
         if (p.player.getId() == 0) {
@@ -211,6 +227,23 @@ public class MyCanvas extends View {
         return -1;
     }
 
+    public void drawCheckeredTiles(Canvas canvas) {
+        for (int r = 0; r < g.b.bHeight; r++) {
+            for (int c = 0; c < g.b.bWidth; c++) {
+                // Even addition tiles are one color, odd addition tiles are another
+                if ((c + r) % 2 == 0) {
+                    paint.setColor(Color.rgb(241,216,181));
+                }
+                else {
+                    paint.setColor(Color.rgb(181,135,101));
+                }
+                RectF rect = new RectF(tileSideLength*c,verticalPadding + tileSideLength*r,
+                        tileSideLength*(c+1),verticalPadding + tileSideLength*(r+1));
+                canvas.drawRect(rect, paint);
+            }
+        }
+    }
+
     public void drawSelectedMoves(Canvas canvas) {
         int[][] selectedMoves = g.getSelectedMoves();
         if (selectedMoves == null)
@@ -225,12 +258,12 @@ public class MyCanvas extends View {
         for (int r = 0; r < g.b.bHeight; r++) {
             for (int c = 0; c < g.b.bWidth; c++) {
                 if (selectedMoves[r][c] == 1) {
-                    paint.setColor(Color.GREEN);
+                    paint.setColor(Color.rgb(70,225,106));
                     rect = new RectF(tileSideLength*c,verticalPadding + tileSideLength*r,tileSideLength*(c+1),verticalPadding + tileSideLength*(r+1));
                     canvas.drawRect(rect, paint);
                 }
                 else if (selectedMoves[r][c] == 2) {
-                    paint.setColor(Color.RED);
+                    paint.setColor(Color.rgb(222, 122, 122));
                     rect = new RectF(tileSideLength*c,verticalPadding + tileSideLength*r,tileSideLength*(c+1),verticalPadding + tileSideLength*(r+1));
                     canvas.drawRect(rect, paint);
                 }

@@ -7,7 +7,7 @@ public class Player {
     private Player enemy;
     ArrayList<Piece> alivePieces;
     ArrayList<Piece> deadPieces;
-    boolean checked; // true if the king is in check
+    boolean checked, checkmated; // true if the king is in check
 
     Player() {
         id = -1;
@@ -114,6 +114,7 @@ public class Player {
         System.out.println(s);
         // If got all the way here, must mean that no possible moves
         // so checkmate is true
+        checkmated = true;
         return true;
     }
 
