@@ -50,8 +50,15 @@ public class MyCanvas extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         configurePaint();
+
+        // If checked, draw a pink square where the current player king is
+        if (g.currentPlayer.checked) {
+            drawPinkCheckSquare(canvas);
+        }
+
         drawSelectedMoves(canvas);
         configurePaint();
+
         // need 9 horizontal lines and 9 vertical lines to draw the board
         horizLines = new int[9][4];
         vertLines = new int[9][4];
@@ -88,6 +95,16 @@ public class MyCanvas extends View {
         drawDeadPieces(g.p1, g.p1.deadPieces, canvas);
     }
 
+    public void drawPinkCheckSquare(Canvas canvas) {
+        for (int i = 0; i < g.currentPlayer.alivePieces.size(); i++) {
+            if (g.currentPlayer.alivePieces.get(i).type.equals("King")) {
+                paint.setColor(Color.rgb(255, 192, 203));
+                RectF rect = new RectF(tileSideLength * g.currentPlayer.alivePieces.get(i).col,verticalPadding + g.currentPlayer.alivePieces.get(i).row,
+                        tileSideLength*(g.currentPlayer.alivePieces.get(i).col+1),verticalPadding + tileSideLength*(g.currentPlayer.alivePieces.get(i).row+1));
+                canvas.drawRect(rect, paint);
+            }
+        }
+    }
     public void drawAlivePiece(Piece p, Canvas canvas) {
         RectF rect;
         if (p.player.getId() == 0) {
@@ -212,8 +229,13 @@ public class MyCanvas extends View {
                     rect = new RectF(tileSideLength*c,verticalPadding + tileSideLength*r,tileSideLength*(c+1),verticalPadding + tileSideLength*(r+1));
                     canvas.drawRect(rect, paint);
                 }
-                if (selectedMoves[r][c] == 2) {
+                else if (selectedMoves[r][c] == 2) {
                     paint.setColor(Color.RED);
+                    rect = new RectF(tileSideLength*c,verticalPadding + tileSideLength*r,tileSideLength*(c+1),verticalPadding + tileSideLength*(r+1));
+                    canvas.drawRect(rect, paint);
+                }
+                else if (selectedMoves[r][c] == -1 || selectedMoves[r][c] == -2) {
+                    paint.setColor(Color.CYAN);
                     rect = new RectF(tileSideLength*c,verticalPadding + tileSideLength*r,tileSideLength*(c+1),verticalPadding + tileSideLength*(r+1));
                     canvas.drawRect(rect, paint);
                 }

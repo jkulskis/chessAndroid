@@ -65,14 +65,17 @@ public class Board {
                     }
                     // P1 Knights
                     if (c == 1 || c == 6) {
+                        //tiles[r][c] = new Tile(r, c);
                         tiles[r][c] = new Knight(p1, r, c);
                     }
                     // P1 Bishops
                     if (c == 2 || c == 5) {
+                        //tiles[r][c] = new Tile(r, c);
                         tiles[r][c] = new Bishop(p1, r, c);
                     }
                     // P1 Queen
                     if (c == 3) {
+                        //tiles[r][c] = new Tile(r, c);
                         tiles[r][c] = new Queen(p1, r, c);
                     }
                     // P1 King
