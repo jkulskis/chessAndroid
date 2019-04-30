@@ -33,9 +33,9 @@ public class MyCanvas extends View {
         width = metrics.widthPixels;
         height = metrics.heightPixels;
 
-        tileSideLength = width/8;
+        tileSideLength = width / 8;
         // assume in vertical mode, so height > width
-        verticalPadding = (height - width)/2;
+        verticalPadding = (height - width) / 2;
     }
 
     public void configurePaint() {
@@ -55,13 +55,17 @@ public class MyCanvas extends View {
         // If checked, draw a pink square where the current player king is
         if (g.currentPlayer.checkmated) {
             fillKingSquare(canvas, true);
-        }
-        else if (g.currentPlayer.checked) {
+        } else if (g.currentPlayer.checked) {
             fillKingSquare(canvas, false);
         }
 
-        drawSelectedMoves(canvas);
-        configurePaint();
+        if (MainActivity.isAdvanced == false) {
+            drawSelectedMoves(canvas);
+            configurePaint();
+        } else {
+            drawSelectedPiece(canvas);
+            configurePaint();
+        }
 
         // need 9 horizontal lines and 9 vertical lines to draw the board
         horizLines = new int[9][4];
@@ -80,10 +84,10 @@ public class MyCanvas extends View {
 
         // Actually draw the lines
         for (int i = 0; i < vertLines.length; i++) {
-            canvas.drawLine(vertLines[i][0],vertLines[i][1],vertLines[i][2],vertLines[i][3], paint);
+            canvas.drawLine(vertLines[i][0], vertLines[i][1], vertLines[i][2], vertLines[i][3], paint);
         }
         for (int i = 0; i < horizLines.length; i++) {
-            canvas.drawLine(horizLines[i][0],horizLines[i][1],horizLines[i][2],horizLines[i][3], paint);
+            canvas.drawLine(horizLines[i][0], horizLines[i][1], horizLines[i][2], horizLines[i][3], paint);
         }
 
         // Draw the alive pieces (P0)
@@ -122,17 +126,16 @@ public class MyCanvas extends View {
             // uncomment to change orientation of P1 pieces for pass and play
 //            rect = new RectF(tileSideLength * p.col, verticalPadding + tileSideLength * (p.row + 1),
 //                    tileSideLength * (p.col + 1), verticalPadding + tileSideLength * p.row);
-        }
-        else {
+        } else {
             rect = new RectF(tileSideLength * p.col, verticalPadding + tileSideLength * p.row,
                     tileSideLength * (p.col + 1), verticalPadding + tileSideLength * (p.row + 1));
         }
         Bitmap b = BitmapFactory.decodeResource(getResources(), getImageId(p));
-        canvas.drawBitmap(b,null, rect, paint);
+        canvas.drawBitmap(b, null, rect, paint);
     }
 
     public void drawDeadPieces(Player player, ArrayList<Piece> pieces, Canvas canvas) {
-        int imageSideLength = (width/(10));
+        int imageSideLength = (width / (10));
         int xScalar = 0;
 
         int firstImageYCoord;
@@ -141,24 +144,22 @@ public class MyCanvas extends View {
         if (player == g.p0) {
             firstImageYCoord = height - verticalPadding / 2 - imageSideLength;
             secondImageYCoord = firstImageYCoord + imageSideLength;
-        }
-        else {
+        } else {
             secondImageYCoord = verticalPadding / 2 + imageSideLength;
             firstImageYCoord = secondImageYCoord - imageSideLength;
         }
 
         for (int i = 0; i < pieces.size(); i++) {
-            RectF rect = new RectF(xScalar + imageSideLength + i*imageSideLength,firstImageYCoord,
-                    xScalar + i*imageSideLength + 2*imageSideLength,secondImageYCoord);
+            RectF rect = new RectF(xScalar + imageSideLength + i * imageSideLength, firstImageYCoord,
+                    xScalar + i * imageSideLength + 2 * imageSideLength, secondImageYCoord);
             Bitmap b = BitmapFactory.decodeResource(getResources(), getImageId(pieces.get(i)));
-            canvas.drawBitmap(b,null, rect, paint);
+            canvas.drawBitmap(b, null, rect, paint);
             if (i == 7) {
                 xScalar = imageSideLength * (-8);
                 if (player == g.p0) {
                     firstImageYCoord += imageSideLength;
                     secondImageYCoord += imageSideLength;
-                }
-                else {
+                } else {
                     firstImageYCoord -= imageSideLength;
                     secondImageYCoord -= imageSideLength;
                 }
@@ -182,8 +183,7 @@ public class MyCanvas extends View {
                 imageId = R.drawable.queen_0;
             else if (p.type.equals("King"))
                 imageId = R.drawable.king_0;
-        }
-        else if (p.player.getId() == 1) {
+        } else if (p.player.getId() == 1) {
             if (p.type.equals("Pawn"))
                 imageId = R.drawable.pawn_1;
             else if (p.type.equals("Rook"))
@@ -225,13 +225,12 @@ public class MyCanvas extends View {
             for (int c = 0; c < g.b.bWidth; c++) {
                 // Even addition tiles are one color, odd addition tiles are another
                 if ((c + r) % 2 == 0) {
-                    paint.setColor(Color.rgb(241,216,181));
+                    paint.setColor(Color.rgb(241, 216, 181));
+                } else {
+                    paint.setColor(Color.rgb(181, 135, 101));
                 }
-                else {
-                    paint.setColor(Color.rgb(181,135,101));
-                }
-                RectF rect = new RectF(tileSideLength*c,verticalPadding + tileSideLength*r,
-                        tileSideLength*(c+1),verticalPadding + tileSideLength*(r+1));
+                RectF rect = new RectF(tileSideLength * c, verticalPadding + tileSideLength * r,
+                        tileSideLength * (c + 1), verticalPadding + tileSideLength * (r + 1));
                 canvas.drawRect(rect, paint);
             }
         }
@@ -244,29 +243,37 @@ public class MyCanvas extends View {
 
         // color the tile of the piece
         paint.setColor(Color.BLUE);
-        RectF rect = new RectF(tileSideLength*g.b.selected.col,verticalPadding + tileSideLength*g.b.selected.row,
-                tileSideLength*(g.b.selected.col+1),verticalPadding + tileSideLength*(g.b.selected.row+1));
+        RectF rect = new RectF(tileSideLength * g.b.selected.col, verticalPadding + tileSideLength * g.b.selected.row,
+                tileSideLength * (g.b.selected.col + 1), verticalPadding + tileSideLength * (g.b.selected.row + 1));
         canvas.drawRect(rect, paint);
 
         for (int r = 0; r < g.b.bHeight; r++) {
             for (int c = 0; c < g.b.bWidth; c++) {
                 if (selectedMoves[r][c] == 1) {
-                    paint.setColor(Color.rgb(70,225,106));
-                    rect = new RectF(tileSideLength*c,verticalPadding + tileSideLength*r,tileSideLength*(c+1),verticalPadding + tileSideLength*(r+1));
+                    paint.setColor(Color.rgb(70, 225, 106));
+                    rect = new RectF(tileSideLength * c, verticalPadding + tileSideLength * r, tileSideLength * (c + 1), verticalPadding + tileSideLength * (r + 1));
                     canvas.drawRect(rect, paint);
-                }
-                else if (selectedMoves[r][c] == 2) {
+                } else if (selectedMoves[r][c] == 2) {
                     paint.setColor(Color.rgb(222, 122, 122));
-                    rect = new RectF(tileSideLength*c,verticalPadding + tileSideLength*r,tileSideLength*(c+1),verticalPadding + tileSideLength*(r+1));
+                    rect = new RectF(tileSideLength * c, verticalPadding + tileSideLength * r, tileSideLength * (c + 1), verticalPadding + tileSideLength * (r + 1));
                     canvas.drawRect(rect, paint);
-                }
-                else if (selectedMoves[r][c] == -1 || selectedMoves[r][c] == -2) {
+                } else if (selectedMoves[r][c] == -1 || selectedMoves[r][c] == -2) {
                     paint.setColor(Color.CYAN);
-                    rect = new RectF(tileSideLength*c,verticalPadding + tileSideLength*r,tileSideLength*(c+1),verticalPadding + tileSideLength*(r+1));
+                    rect = new RectF(tileSideLength * c, verticalPadding + tileSideLength * r, tileSideLength * (c + 1), verticalPadding + tileSideLength * (r + 1));
                     canvas.drawRect(rect, paint);
                 }
             }
         }
     }
+    public void drawSelectedPiece(Canvas canvas) {
+        int[][] selectedMoves = g.getSelectedMoves();
+        if (selectedMoves == null)
+            return;
 
+        // color the tile of the piece
+        paint.setColor(Color.BLUE);
+        RectF rect = new RectF(tileSideLength * g.b.selected.col, verticalPadding + tileSideLength * g.b.selected.row,
+                tileSideLength * (g.b.selected.col + 1), verticalPadding + tileSideLength * (g.b.selected.row + 1));
+        canvas.drawRect(rect, paint);
+    }
 }

@@ -1,6 +1,7 @@
 package com.example.chess;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -18,10 +19,7 @@ public class gameActivity extends Activity implements View.OnClickListener {
     MyCanvas myCanvas;
     DisplayMetrics metrics;
     Game g;
-
-    public gameActivity() {
-
-    }
+    int p1Avatar, p2Avatar;
 
     View.OnTouchListener touchListener = new View.OnTouchListener() {
         @Override
@@ -59,7 +57,7 @@ public class gameActivity extends Activity implements View.OnClickListener {
             if (row != -1 && g.b.tiles[row][col].value != 0 && g.b.tiles[row][col].player == g.currentPlayer){
                 if (g.b.selected == null || g.b.selected.col != col || g.b.selected.row != row) {
                     g.b.selected = g.b.tiles[row][col];
-                    System.out.println(g.b.selected.value);
+//                    System.out.println(g.b.selected.value);
                 }
                 // if selected is the clicked piece, then deselect it by setting
                 // selected to null
@@ -76,10 +74,23 @@ public class gameActivity extends Activity implements View.OnClickListener {
     };
 
     @Override
+    public void onBackPressed() {
+        // Go back to title screen if back button is pressed
+        Intent TitleScreen = new Intent(gameActivity.this, MainActivity.class);
+
+        //Launches the new activity
+        startActivity(TitleScreen);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        g = new Game();
+        Intent avatarScreen = getIntent();
+        p1Avatar = avatarScreen.getIntExtra("p1Avatar", 0);
+        p2Avatar = avatarScreen.getIntExtra("p2Avatar", 0);
+
+        g = new Game(p1Avatar, p2Avatar);
 
         setContentView(R.layout.activity_game);
         myCanvas = new MyCanvas(this, g);

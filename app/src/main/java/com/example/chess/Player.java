@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class Player {
     private int id;
+    public int avatarId;
     private Player enemy;
     ArrayList<Piece> alivePieces;
     ArrayList<Piece> deadPieces;
@@ -13,15 +14,18 @@ public class Player {
         id = -1;
     }
 
-    Player(int id) {
+    Player(int id, int avatarId) {
         this.id = id;
+        this.avatarId = avatarId;
         alivePieces = new ArrayList<Piece>();
         deadPieces = new ArrayList<Piece>();
     }
 
-    Player(int id, Player enemy) {
-        this(id);
+    Player(int id, int avatarId, Player enemy) {
+        this(id, 0);
+        this.avatarId = avatarId;
         this.enemy = enemy;
+        enemy.setEnemy(this);
     }
 
     public void addPiece(Piece p) {

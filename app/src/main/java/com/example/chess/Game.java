@@ -6,10 +6,9 @@ public class Game {
     Board b;
     Player currentPlayer;
 
-    public Game() {
-        p0 = new Player(0);
-        p1 = new Player(1, p0);
-        p0.setEnemy(p1);
+    public Game(int p0Id, int p1Id) {
+        p0 = new Player(0, p0Id);
+        p1 = new Player(1, p1Id, p0);
         b = new Board(p0, p1);
         currentPlayer = p1;
     }
@@ -21,9 +20,8 @@ public class Game {
     }
 
     public void startGame() {
-        p0 = new Player(0);
-        p1 = new Player(1, p0);
-        p0.setEnemy(p1);
+        p0 = new Player(0, p0.avatarId);
+        p1 = new Player(1, p1.avatarId, p0);
         b = new Board(p0, p1);
         currentPlayer = p1;
     }
