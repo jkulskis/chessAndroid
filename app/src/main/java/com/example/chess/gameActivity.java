@@ -57,24 +57,25 @@ public class gameActivity extends Activity implements View.OnClickListener {
             System.out.print("Col: ");
             System.out.println(myCanvas.getCol(lastClick[0], lastClick[1]));
 
-            int row, col;
+            int row = myCanvas.getRow(lastClick[0], lastClick[1]);
+            int col;
             col = myCanvas.getCol(lastClick[0], lastClick[1]);
             // row changes when flipped
             if (myCanvas.flipped) {
-                row = 7 - myCanvas.getRow(lastClick[0], lastClick[1]);
-            } else {
-                row = myCanvas.getRow(lastClick[0], lastClick[1]);
+                if (row != -1)
+                    row = 7 - row;
             }
 
             if (pawnSelection == -1) {
                 // only need to check if row is -1 since they are both -1 for invalid tile click
                 // if it is a valid tile, then check to see if there is a piece there and if it is different
                 // than the current piece
-                if (row != -1 && g.b.tiles[row][col].value != 0 && g.b.tiles[row][col].player == g.currentPlayer) {
-                    if (g.b.selected == null || g.b.selected.col != col || g.b.selected.row != row) {
-                        g.b.selected = g.b.tiles[row][col];
-//                    System.out.println(g.b.selected.value);
-                    }
+                if (row != -1)
+                    if (g.b.tiles[row][col].value != 0 && g.b.tiles[row][col].player == g.currentPlayer) {
+                        if (g.b.selected == null || g.b.selected.col != col || g.b.selected.row != row) {
+                            g.b.selected = g.b.tiles[row][col];
+    //                    System.out.println(g.b.selected.value);
+                        }
                     // if selected is the clicked piece, then deselect it by setting
                     // selected to null
                     else if (g.b.selected.col == col && g.b.selected.row == row) {
@@ -115,7 +116,6 @@ public class gameActivity extends Activity implements View.OnClickListener {
 
                 // clicks to select a new piece
                 if (row == 3 || row == 4) {
-                    System.out.println("made it here");
                     if (col == 0 || col == 1) {
                         g.b.tiles[pawnRow][pawnCol] = new Rook(p, pawnRow, pawnCol);
                     }
@@ -135,8 +135,21 @@ public class gameActivity extends Activity implements View.OnClickListener {
                     myCanvas.invalidate();
                 }
             }
+            if (g.currentPlayer.checkmated) {
+               victory();
+            }
         }
     };
+
+    public void victory() {
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                myCanvas.invalidate();
+                victory();
+            }
+        }, 50);
+    }
 
     @Override
     public void onBackPressed() {

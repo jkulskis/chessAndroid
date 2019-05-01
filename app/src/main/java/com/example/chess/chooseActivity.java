@@ -192,7 +192,7 @@ public class chooseActivity extends Activity implements View.OnClickListener {
                     gameActivity.putExtra("p2OpenAvatar", p2OpenAvatar);
                     startActivity(gameActivity);
                 }
-            }, 1000);
+            }, 3000);
         }
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -200,9 +200,11 @@ public class chooseActivity extends Activity implements View.OnClickListener {
                 loadingGif.setRotation(rotation);
                 launchGameActivity(rotation + 15, false);
             }
-        }, 30);
+        }, 25);
 
     }
+
+
 
 
 }

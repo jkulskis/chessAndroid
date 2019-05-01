@@ -30,6 +30,8 @@ public class MyCanvas extends View {
     Bitmap p0Avatar, p1Avatar, openp0Avatar, openp1Avatar;
     boolean flipped;
     int drawPawnSelection;
+    int victoryXScalar;
+    boolean victoryDanceRight;
 
 
     public MyCanvas(Context context, Game g) {
@@ -75,14 +77,19 @@ public class MyCanvas extends View {
         // set background to #4A0C21
         canvas.drawColor(Color.parseColor("#4A0C21"));
 
-        // draw the avatars
-        drawAvatar(g.p0, canvas, false);
-        drawAvatar(g.p1, canvas, false);
 
+
+        if (g.currentPlayer.checkmated == false) {
+            // draw the avatars
+            drawAvatar(g.p0, canvas, false, false);
+            drawAvatar(g.p1, canvas, false, false);
+        }
         drawCheckeredTiles(canvas);
         // If checked, draw a pink square where the current player king is
         if (g.currentPlayer.checkmated) {
             fillKingSquare(canvas, true);
+            drawAvatar(g.currentPlayer.getEnemy(), canvas, false, true);
+            drawAvatar(g.currentPlayer, canvas, false, false);
         } else if (g.currentPlayer.checked) {
             fillKingSquare(canvas, false);
         }
@@ -108,6 +115,7 @@ public class MyCanvas extends View {
         // Find and store the coordinates for the horizontal lines
         for (int i = 0; i < 9; i++) {
             int[] newCoord = {0, verticalPadding + tileSideLength * i, width, verticalPadding + tileSideLength * i};
+            horizLines[i] = newCoord;
             horizLines[i] = newCoord;
         }
 
@@ -206,26 +214,44 @@ public class MyCanvas extends View {
             firstImageYCoord = secondImageYCoord - imageSideLength;
         }
 
+        if (player == g.p1) {
+            xScalar += 3 * verticalPadding/4;
+        }
+        else {
+            xScalar += width - 3 * verticalPadding/4;
+        }
+
         for (int i = 0; i < pieces.size(); i++) {
+            int firstX;
+            int secondX;
+            if (player == g.p0) {
+                firstX = xScalar - i * imageSideLength;
+                secondX = xScalar - (i+1) * imageSideLength;
+            }
+            else {
+                firstX = xScalar + i * imageSideLength;
+                secondX = xScalar + (i+1) * imageSideLength;
+            }
 
             RectF rect;
             if (flipped) {
-                rect = new RectF(xScalar + i * imageSideLength, secondImageYCoord,
-                        xScalar + (i+1) * imageSideLength, firstImageYCoord);
+                rect = new RectF(firstX, secondImageYCoord,
+                        secondX, firstImageYCoord);
             }
             else {
-                rect = new RectF(xScalar + i * imageSideLength, firstImageYCoord,
-                        xScalar + (i+1) * imageSideLength, secondImageYCoord);
+                rect = new RectF(firstX, firstImageYCoord,
+                        secondX, secondImageYCoord);
             }
 
             Bitmap b = BitmapFactory.decodeResource(getResources(), getImageId(pieces.get(i)));
             canvas.drawBitmap(b, null, rect, paint);
             if (i == 7) {
-                xScalar = imageSideLength * (-8);
                 if (player == g.p0) {
+                    xScalar += imageSideLength * (8);
                     firstImageYCoord += imageSideLength;
                     secondImageYCoord += imageSideLength;
                 } else {
+                    xScalar -= imageSideLength * (8);
                     firstImageYCoord -= imageSideLength;
                     secondImageYCoord -= imageSideLength;
                 }
@@ -344,16 +370,43 @@ public class MyCanvas extends View {
                 tileSideLength * (g.b.selected.col + 1), verticalPadding + tileSideLength * (g.b.selected.row + 1));
         canvas.drawRect(rect, paint);
     }
-    public void drawAvatar(Player player, Canvas canvas, boolean open) {
+    public void drawAvatar(Player player, Canvas canvas, boolean open, boolean victoryDance) {
+
+        // Victory dance stuff
+        if (victoryDance) {
+            if (victoryXScalar + 3*verticalPadding/4 <= width && victoryXScalar >= 0) {
+                if (victoryDanceRight) {
+                    victoryXScalar += width/30;
+                }
+                else {
+                    victoryXScalar -= width/30;
+                }
+            }
+            else {
+                if (victoryXScalar + 3*verticalPadding/4 > width) {
+                    victoryXScalar = victoryXScalar + 3 * verticalPadding / 4;
+                    victoryDanceRight = false;
+                }
+                else if (victoryXScalar < 0) {
+                    victoryXScalar = 0;
+                    victoryDanceRight = true;
+                }
+            }
+
+        }
+        else {
+            victoryXScalar = 0;
+        }
+
         RectF rect;
         if (player.getId() == 1) {
             if (flipped) {
-                rect = new RectF(width - 3 * verticalPadding / 4, verticalPadding,
-                        width, verticalPadding/4);
+                rect = new RectF(victoryXScalar , verticalPadding,
+                        3 * verticalPadding / 4 + victoryXScalar, verticalPadding/4);
             }
             else {
-                rect = new RectF(width - 3 * verticalPadding / 4, verticalPadding/4,
-                        width, verticalPadding);
+                rect = new RectF(3 * verticalPadding / 4 + victoryXScalar, verticalPadding/4,
+                        victoryXScalar, verticalPadding);
             }
             canvas.drawRect(rect, paint);
 
@@ -364,12 +417,12 @@ public class MyCanvas extends View {
         }
         else if (player.getId() == 0) {
             if (flipped) {
-                rect = new RectF(width - 3 * verticalPadding / 4, height - verticalPadding/4,
-                        width, height - verticalPadding);
+                rect = new RectF(width - (3 * verticalPadding / 4 + victoryXScalar), height - verticalPadding/4,
+                        width - victoryXScalar, height - verticalPadding);
             }
             else {
-                rect = new RectF(width - 3 * verticalPadding / 4, height - verticalPadding,
-                        width, height - verticalPadding/4);
+                rect = new RectF(width - (3 * verticalPadding / 4 + victoryXScalar), height - verticalPadding,
+                        width - victoryXScalar, height - verticalPadding/4);
             }
             canvas.drawRect(rect, paint);
 
