@@ -19,7 +19,7 @@ public class gameActivity extends Activity implements View.OnClickListener {
     MyCanvas myCanvas;
     DisplayMetrics metrics;
     Game g;
-    int p1Avatar, p2Avatar;
+    int p1Avatar, p2Avatar, p1OpenAvatar, p2OpenAvatar;
 
     View.OnTouchListener touchListener = new View.OnTouchListener() {
         @Override
@@ -86,11 +86,12 @@ public class gameActivity extends Activity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Intent avatarScreen = getIntent();
-        p1Avatar = avatarScreen.getIntExtra("p1Avatar", 0);
-        p2Avatar = avatarScreen.getIntExtra("p2Avatar", 0);
+        p1Avatar = getIntent().getIntExtra("p1Avatar", 0);
+        p2Avatar = getIntent().getIntExtra("p2Avatar", 0);
+        p1OpenAvatar = getIntent().getIntExtra("p1OpenAvatar", 0);
+        p2OpenAvatar = getIntent().getIntExtra("p2OpenAvatar", 0);
 
-        g = new Game(p1Avatar, p2Avatar);
+        g = new Game(p1Avatar, p2Avatar, p1OpenAvatar, p2OpenAvatar);
 
         setContentView(R.layout.activity_game);
         myCanvas = new MyCanvas(this, g);

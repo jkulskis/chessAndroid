@@ -20,8 +20,8 @@ public class chooseActivity extends Activity implements View.OnClickListener {
 
     private TextView topText;
 
-    public int avatarIDp1 = 0;
-    public int avatarIDp2 = 0;
+    public int width, height;
+    public int avatarIDp1, avatarIDp2, p1OpenAvatar, p2OpenAvatar;
     boolean player1Select;
     //public chooseActivity();
 
@@ -30,6 +30,9 @@ public class chooseActivity extends Activity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose);
+
+        width = getResources().getDisplayMetrics().widthPixels/3;
+        height =  getResources().getDisplayMetrics().heightPixels/3;
 
         Stringhini = findViewById(R.id.avatarStringhini);
         Stringhini.setOnClickListener(this);
@@ -65,11 +68,14 @@ public class chooseActivity extends Activity implements View.OnClickListener {
             case R.id.avatarStringhini: {
                 Stringhini.setVisibility(View.GONE);
                 if (player1Select) {
-                    avatarIDp1 = R.id.avatarStringhini;
+                    avatarIDp1 = R.drawable.stringhini;
+                    p1OpenAvatar = R.drawable.stringhini_1;
                     topText.setText("Great Choice! Now Player 2");
                     player1Select = false;
                 }
                 else {
+                    avatarIDp2 = R.drawable.stringhini;
+                    p2OpenAvatar = R.drawable.stringhini_1;
                     launchGameActivity(5, true);
                 }
                 break;
@@ -79,12 +85,14 @@ public class chooseActivity extends Activity implements View.OnClickListener {
             case R.id.avatarJosh: {
                 Josh.setVisibility(View.GONE);
                 if (player1Select) {
-                    avatarIDp1 = R.id.avatarJosh;
+                    avatarIDp1 = R.drawable.josh;
+                    p1OpenAvatar = R.drawable.josh_1;
                     topText.setText("Great Choice! Now Player 2");
                     player1Select = false;
                 }
                 else {
-                    avatarIDp2 = R.id.avatarJosh;
+                    avatarIDp2 = R.drawable.josh;
+                    p2OpenAvatar = R.drawable.josh_1;
                     launchGameActivity(5, true);
                 }
                 break;
@@ -93,12 +101,14 @@ public class chooseActivity extends Activity implements View.OnClickListener {
             case R.id.avatarBrown: {
                 Brown.setVisibility(View.GONE);
                 if (player1Select) {
-                    avatarIDp1 = R.id.avatarBrown;
+                    avatarIDp1 = R.drawable.brown;
+                    p1OpenAvatar = R.drawable.brown_1;
                     topText.setText("Great Choice! Now Player 2");
                     player1Select = false;
                 }
                 else {
-                    avatarIDp2 = R.id.avatarBrown;
+                    avatarIDp2 = R.drawable.brown;
+                    p2OpenAvatar = R.drawable.brown_1;
                     launchGameActivity(5, true);
                 }
                 break;
@@ -106,12 +116,14 @@ public class chooseActivity extends Activity implements View.OnClickListener {
             case R.id.avatarJared: {
                 Jared.setVisibility(View.GONE);
                 if (player1Select) {
-                    avatarIDp1 = R.id.avatarJared;
+                    avatarIDp1 = R.drawable.jared;
+                    p1OpenAvatar = R.drawable.jared_1;
                     topText.setText("Great Choice! Now Player 2");
                     player1Select = false;
                 }
                 else {
-                    avatarIDp2 = R.id.avatarJared;
+                    avatarIDp2 = R.drawable.jared;
+                    p2OpenAvatar = R.drawable.jared_1;
                     launchGameActivity(5, true);
                 }
                 break;
@@ -119,11 +131,13 @@ public class chooseActivity extends Activity implements View.OnClickListener {
             case R.id.avatarNatalie: {
                 Natalie.setVisibility(View.GONE);
                 if (player1Select) {
-                    avatarIDp1 = R.id.avatarNatalie;
+                    avatarIDp1 = R.drawable.natalie;
+                    p1OpenAvatar = R.drawable.natalie_1;
                     topText.setText("Great Choice! Now Player 2");
                     player1Select = false;
                 } else {
-                    avatarIDp2 = R.id.avatarNatalie;
+                    avatarIDp2 = R.drawable.natalie;
+                    p2OpenAvatar = R.drawable.natalie_1;
                     launchGameActivity(5, true);
                 }
                 break;
@@ -131,11 +145,13 @@ public class chooseActivity extends Activity implements View.OnClickListener {
             case R.id.avatarKrishna: {
                 Krishna.setVisibility(View.GONE);
                 if (player1Select) {
-                    avatarIDp1 = R.id.avatarKrishna;
+                    avatarIDp1 = R.drawable.krishna;
+                    p1OpenAvatar = R.drawable.krishna_1;
                     topText.setText("Great Choice! Now Player 2");
                     player1Select = false;
                 } else {
-                    avatarIDp2 = R.id.avatarKrishna;
+                    avatarIDp2 = R.drawable.krishna;
+                    p2OpenAvatar = R.drawable.krishna_1;
                     launchGameActivity(5, true);
                 }
                 break;
@@ -161,6 +177,7 @@ public class chooseActivity extends Activity implements View.OnClickListener {
             Natalie.setVisibility(View.GONE);
             topText.setVisibility(View.GONE);
             findViewById(R.id.loadingText).setVisibility(View.VISIBLE);
+            //loadingGif.setLayoutParams(new LinearLayout.LayoutParams(width,height));
             loadingGif.setVisibility(View.VISIBLE);
             loadingGif.setScaleType(ImageView.ScaleType.FIT_XY);
             avatarIDp2 = R.id.avatarStringhini;
@@ -172,10 +189,13 @@ public class chooseActivity extends Activity implements View.OnClickListener {
                     //Launches the new activity
                     Intent gameActivity = new Intent(chooseActivity.this, gameActivity.class);
                     gameActivity.putExtra("p1Avatar", avatarIDp1);
-                    gameActivity.putExtra("p1Avatar", avatarIDp2);
+                    System.out.println("avatar id before" + avatarIDp1);
+                    gameActivity.putExtra("p2Avatar", avatarIDp2);
+                    gameActivity.putExtra("p1OpenAvatar", p1OpenAvatar);
+                    gameActivity.putExtra("p2OpenAvatar", p2OpenAvatar);
                     startActivity(gameActivity);
                 }
-            }, 5000);
+            }, 1000);
         }
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -183,8 +203,9 @@ public class chooseActivity extends Activity implements View.OnClickListener {
                 loadingGif.setRotation(rotation);
                 launchGameActivity(rotation + 15, false);
             }
-        }, 10);
+        }, 30);
 
     }
+
 
 }

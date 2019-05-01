@@ -51,6 +51,13 @@ public class MyCanvas extends View {
         super.onDraw(canvas);
         configurePaint();
 
+        // set background to #4A0C21
+        canvas.drawColor(Color.parseColor("#4A0C21"));
+
+        // draw the avatars
+        drawAvatar(g.p0, canvas);
+        drawAvatar(g.p1, canvas);
+
         drawCheckeredTiles(canvas);
         // If checked, draw a pink square where the current player king is
         if (g.currentPlayer.checkmated) {
@@ -135,7 +142,7 @@ public class MyCanvas extends View {
     }
 
     public void drawDeadPieces(Player player, ArrayList<Piece> pieces, Canvas canvas) {
-        int imageSideLength = (width / (10));
+        int imageSideLength = (width / (11));
         int xScalar = 0;
 
         int firstImageYCoord;
@@ -150,8 +157,9 @@ public class MyCanvas extends View {
         }
 
         for (int i = 0; i < pieces.size(); i++) {
-            RectF rect = new RectF(xScalar + imageSideLength + i * imageSideLength, firstImageYCoord,
-                    xScalar + i * imageSideLength + 2 * imageSideLength, secondImageYCoord);
+
+            RectF rect = new RectF(xScalar + i * imageSideLength, firstImageYCoord,
+                    xScalar + (i+1) * imageSideLength, secondImageYCoord);
             Bitmap b = BitmapFactory.decodeResource(getResources(), getImageId(pieces.get(i)));
             canvas.drawBitmap(b, null, rect, paint);
             if (i == 7) {
@@ -275,5 +283,22 @@ public class MyCanvas extends View {
         RectF rect = new RectF(tileSideLength * g.b.selected.col, verticalPadding + tileSideLength * g.b.selected.row,
                 tileSideLength * (g.b.selected.col + 1), verticalPadding + tileSideLength * (g.b.selected.row + 1));
         canvas.drawRect(rect, paint);
+    }
+    public void drawAvatar(Player player, Canvas canvas) {
+        if (player.getId() == 0) {
+            RectF rect = new RectF(width - 3 * verticalPadding / 4, verticalPadding/4,
+                    width, 3 * verticalPadding / 4);
+            canvas.drawRect(rect, paint);
+            Bitmap b = BitmapFactory.decodeResource(getResources(), player.avatarId);
+            canvas.drawBitmap(b, null, rect, null);
+        }
+        else if (player.getId() == 1) {
+            RectF rect = new RectF(width - 3 * verticalPadding / 4, height - 3 * verticalPadding / 4,
+                    width, height - verticalPadding / 4);
+            canvas.drawRect(rect, paint);
+            System.out.println("player avatar: " + player.avatarId);
+            Bitmap b = BitmapFactory.decodeResource(getResources(), player.avatarId);
+            canvas.drawBitmap(b, null, rect, null);
+        }
     }
 }
