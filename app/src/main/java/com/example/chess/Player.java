@@ -14,6 +14,11 @@ public class Player {
         id = -1;
     }
 
+    Player(int id) {
+        this.id = id;
+        alivePieces = new ArrayList<Piece>();
+    }
+
     Player(int id, int avatarId, int openAvatarId) {
         this.id = id;
         this.avatarId = avatarId;

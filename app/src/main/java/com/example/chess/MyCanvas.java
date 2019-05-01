@@ -8,6 +8,11 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.os.Handler;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.DisplayMetrics;
 import android.view.View;
 
@@ -22,11 +27,23 @@ public class MyCanvas extends View {
     int tileSideLength;
     int[][] vertLines, horizLines;
     int verticalPadding;
+    Bitmap p0Avatar, p1Avatar, openp0Avatar, openp1Avatar;
+    boolean flipped;
+    int drawPawnSelection;
+
 
     public MyCanvas(Context context, Game g) {
         super(context);
+
+        drawPawnSelection = -1;
         this.g = g;
         paint = new Paint();
+
+        p0Avatar = getBitmapFromVectorDrawable(getContext(), g.p0.avatarId);
+        p1Avatar = getBitmapFromVectorDrawable(getContext(), g.p1.avatarId);
+        openp0Avatar = getBitmapFromVectorDrawable(getContext(), g.p0.openAvatarId);
+        openp1Avatar = getBitmapFromVectorDrawable(getContext(), g.p1.openAvatarId);
+
         metrics = context.getResources().getDisplayMetrics();
         setWillNotDraw(false);
 
@@ -48,6 +65,10 @@ public class MyCanvas extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        // flip the board after every turn
+        if (flipped) {
+            canvas.scale(1, -1, width / 2, height / 2);
+        }
         super.onDraw(canvas);
         configurePaint();
 
@@ -55,8 +76,8 @@ public class MyCanvas extends View {
         canvas.drawColor(Color.parseColor("#4A0C21"));
 
         // draw the avatars
-        drawAvatar(g.p0, canvas);
-        drawAvatar(g.p1, canvas);
+        drawAvatar(g.p0, canvas, false);
+        drawAvatar(g.p1, canvas, false);
 
         drawCheckeredTiles(canvas);
         // If checked, draw a pink square where the current player king is
@@ -65,13 +86,14 @@ public class MyCanvas extends View {
         } else if (g.currentPlayer.checked) {
             fillKingSquare(canvas, false);
         }
-
-        if (MainActivity.isAdvanced == false) {
-            drawSelectedMoves(canvas);
-            configurePaint();
-        } else {
-            drawSelectedPiece(canvas);
-            configurePaint();
+        if (drawPawnSelection == -1) {
+            if (MainActivity.isAdvanced == false) {
+                drawSelectedMoves(canvas);
+                configurePaint();
+            } else {
+                drawSelectedPiece(canvas);
+                configurePaint();
+            }
         }
 
         // need 9 horizontal lines and 9 vertical lines to draw the board
@@ -97,43 +119,71 @@ public class MyCanvas extends View {
             canvas.drawLine(horizLines[i][0], horizLines[i][1], horizLines[i][2], horizLines[i][3], paint);
         }
 
-        // Draw the alive pieces (P0)
-        for (int i = 0; i < g.p0.alivePieces.size(); i++) {
-            drawAlivePiece(g.p0.alivePieces.get(i), canvas);
+        if (drawPawnSelection == -1) {
+            // Draw the alive pieces (P0)
+            for (int i = 0; i < g.p0.alivePieces.size(); i++) {
+                drawAlivePiece(g.p0.alivePieces.get(i), canvas);
+            }
+            // Draw the alive pieces (P1)
+            for (int i = 0; i < g.p1.alivePieces.size(); i++) {
+                drawAlivePiece(g.p1.alivePieces.get(i), canvas);
+            }
         }
-        // Draw the alive pieces (P1)
-        for (int i = 0; i < g.p1.alivePieces.size(); i++) {
-            drawAlivePiece(g.p1.alivePieces.get(i), canvas);
+        else {
+            drawPawnSelection(canvas);
         }
 
         drawDeadPieces(g.p0, g.p0.deadPieces, canvas);
         drawDeadPieces(g.p1, g.p1.deadPieces, canvas);
     }
 
+    public void drawPawnSelection(Canvas canvas) {
+        Piece[] list = new Piece[4];
+        Player p = new Player(drawPawnSelection);
+        list[0] = new Rook(p,0, 0);
+        list[1] = new Knight(p,0, 0);
+        list[2] = new Bishop(p, 0, 0);
+        list[3] = new Queen(p, 0, 0);
+        RectF rect;
+        for (int i = 0; i < 8; i += 2) {
+            if (flipped) {
+                rect = new RectF(tileSideLength * i, verticalPadding + tileSideLength * 5,
+                        tileSideLength * (i + 2), verticalPadding + tileSideLength * 3);
+            } else {
+                rect = new RectF(tileSideLength * i, verticalPadding + tileSideLength * 3,
+                        tileSideLength * (i + 2), verticalPadding + tileSideLength * 5);
+            }
+            Bitmap b = BitmapFactory.decodeResource(getResources(), getImageId(list[i/2]));
+            canvas.drawBitmap(b, null, rect, null);
+        }
+    }
     // if checkmate == true, then draw a red square ... otherwise draw a pink square (for check)
     public void fillKingSquare(Canvas canvas, boolean checkmate) {
+
         for (int i = 0; i < g.currentPlayer.alivePieces.size(); i++) {
             if (g.currentPlayer.alivePieces.get(i).type.equals("King")) {
                 if (checkmate)
                     paint.setColor(Color.rgb(255, 0, 0));
                 else
                     paint.setColor(Color.rgb(225, 135, 174));
-                RectF rect = new RectF(tileSideLength * g.currentPlayer.alivePieces.get(i).col, verticalPadding + g.currentPlayer.alivePieces.get(i).row * tileSideLength,
-                        tileSideLength * (g.currentPlayer.alivePieces.get(i).col + 1), verticalPadding + tileSideLength * (g.currentPlayer.alivePieces.get(i).row + 1));
+                RectF rect;
+                System.out.println("made it check");
+                rect = new RectF(tileSideLength * g.currentPlayer.alivePieces.get(i).col, verticalPadding + g.currentPlayer.alivePieces.get(i).row * tileSideLength,
+                            tileSideLength * (g.currentPlayer.alivePieces.get(i).col + 1), verticalPadding + tileSideLength * (g.currentPlayer.alivePieces.get(i).row + 1));
+
                 canvas.drawRect(rect, paint);
+                break;
             }
         }
     }
 
     public void drawAlivePiece(Piece p, Canvas canvas) {
         RectF rect;
-        if (p.player.getId() == 0) {
-            rect = new RectF(tileSideLength * p.col, verticalPadding + tileSideLength * p.row,
-                    tileSideLength * (p.col + 1), verticalPadding + tileSideLength * (p.row + 1));
-            // uncomment to change orientation of P1 pieces for pass and play
-//            rect = new RectF(tileSideLength * p.col, verticalPadding + tileSideLength * (p.row + 1),
-//                    tileSideLength * (p.col + 1), verticalPadding + tileSideLength * p.row);
-        } else {
+        if (flipped) {
+            rect = new RectF(tileSideLength * p.col, verticalPadding + tileSideLength * (p.row + 1),
+                    tileSideLength * (p.col + 1),verticalPadding + tileSideLength * p.row);
+        }
+        else {
             rect = new RectF(tileSideLength * p.col, verticalPadding + tileSideLength * p.row,
                     tileSideLength * (p.col + 1), verticalPadding + tileSideLength * (p.row + 1));
         }
@@ -158,8 +208,16 @@ public class MyCanvas extends View {
 
         for (int i = 0; i < pieces.size(); i++) {
 
-            RectF rect = new RectF(xScalar + i * imageSideLength, firstImageYCoord,
-                    xScalar + (i+1) * imageSideLength, secondImageYCoord);
+            RectF rect;
+            if (flipped) {
+                rect = new RectF(xScalar + i * imageSideLength, secondImageYCoord,
+                        xScalar + (i+1) * imageSideLength, firstImageYCoord);
+            }
+            else {
+                rect = new RectF(xScalar + i * imageSideLength, firstImageYCoord,
+                        xScalar + (i+1) * imageSideLength, secondImageYCoord);
+            }
+
             Bitmap b = BitmapFactory.decodeResource(getResources(), getImageId(pieces.get(i)));
             canvas.drawBitmap(b, null, rect, paint);
             if (i == 7) {
@@ -237,8 +295,10 @@ public class MyCanvas extends View {
                 } else {
                     paint.setColor(Color.rgb(181, 135, 101));
                 }
-                RectF rect = new RectF(tileSideLength * c, verticalPadding + tileSideLength * r,
+                RectF rect;
+                rect = new RectF(tileSideLength * c, verticalPadding + tileSideLength * r,
                         tileSideLength * (c + 1), verticalPadding + tileSideLength * (r + 1));
+
                 canvas.drawRect(rect, paint);
             }
         }
@@ -284,21 +344,58 @@ public class MyCanvas extends View {
                 tileSideLength * (g.b.selected.col + 1), verticalPadding + tileSideLength * (g.b.selected.row + 1));
         canvas.drawRect(rect, paint);
     }
-    public void drawAvatar(Player player, Canvas canvas) {
-        if (player.getId() == 0) {
-            RectF rect = new RectF(width - 3 * verticalPadding / 4, verticalPadding/4,
-                    width, 3 * verticalPadding / 4);
+    public void drawAvatar(Player player, Canvas canvas, boolean open) {
+        RectF rect;
+        if (player.getId() == 1) {
+            if (flipped) {
+                rect = new RectF(width - 3 * verticalPadding / 4, verticalPadding,
+                        width, verticalPadding/4);
+            }
+            else {
+                rect = new RectF(width - 3 * verticalPadding / 4, verticalPadding/4,
+                        width, verticalPadding);
+            }
             canvas.drawRect(rect, paint);
-            Bitmap b = BitmapFactory.decodeResource(getResources(), player.avatarId);
-            canvas.drawBitmap(b, null, rect, null);
+
+            if (open)
+                canvas.drawBitmap(openp1Avatar, null, rect, null);
+            else
+                canvas.drawBitmap(p1Avatar, null, rect, null);
         }
-        else if (player.getId() == 1) {
-            RectF rect = new RectF(width - 3 * verticalPadding / 4, height - 3 * verticalPadding / 4,
-                    width, height - verticalPadding / 4);
+        else if (player.getId() == 0) {
+            if (flipped) {
+                rect = new RectF(width - 3 * verticalPadding / 4, height - verticalPadding/4,
+                        width, height - verticalPadding);
+            }
+            else {
+                rect = new RectF(width - 3 * verticalPadding / 4, height - verticalPadding,
+                        width, height - verticalPadding/4);
+            }
             canvas.drawRect(rect, paint);
-            System.out.println("player avatar: " + player.avatarId);
-            Bitmap b = BitmapFactory.decodeResource(getResources(), player.avatarId);
-            canvas.drawBitmap(b, null, rect, null);
+
+            if (open)
+                canvas.drawBitmap(openp0Avatar, null, rect, null);
+            else
+                canvas.drawBitmap(p0Avatar, null, rect, null);
+
         }
     }
+
+    // getting bitmap from vector drawable function found at stackoverflow.com/questions/33696488/getting-bitmap-from-vector-drawable
+    // although the chess images converted to bitmap fine, we needed to use this function to convert our other images
+    public static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
+        Drawable drawable = ContextCompat.getDrawable(context, drawableId);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            drawable = (DrawableCompat.wrap(drawable)).mutate();
+        }
+
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
+                drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+
+        return bitmap;
+    }
+
 }

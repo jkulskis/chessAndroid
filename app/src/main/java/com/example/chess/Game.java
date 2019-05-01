@@ -59,7 +59,14 @@ public class Game {
         if (currentPlayer.move(b, r1, c1, r2, c2)) {
             // if was checked and moved, should be unchecked
             currentPlayer.checked = false;
-            return goToNextTurn();
+            if (r2 == 0 || r2 == 7) {
+                int pUpgrade = checkPawnUpgrade(r2, c2);
+                if (pUpgrade != -1) {
+                    return pUpgrade;
+                }
+            }
+            goToNextTurn();
+            return -1;
         }
         return -1;
     }
@@ -87,5 +94,11 @@ public class Game {
         if (possibleMoves[row][col] != 0)
             return true;
         return false;
+    }
+    public int checkPawnUpgrade(int r, int c) {
+        if (b.tiles[r][c].type.equals("Pawn")) {
+            return b.tiles[r][c].player.getId();
+        }
+        return -1;
     }
 }

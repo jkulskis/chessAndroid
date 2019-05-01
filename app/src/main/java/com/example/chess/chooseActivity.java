@@ -177,10 +177,8 @@ public class chooseActivity extends Activity implements View.OnClickListener {
             Natalie.setVisibility(View.GONE);
             topText.setVisibility(View.GONE);
             findViewById(R.id.loadingText).setVisibility(View.VISIBLE);
-            //loadingGif.setLayoutParams(new LinearLayout.LayoutParams(width,height));
             loadingGif.setVisibility(View.VISIBLE);
             loadingGif.setScaleType(ImageView.ScaleType.FIT_XY);
-            avatarIDp2 = R.id.avatarStringhini;
 
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
@@ -189,7 +187,6 @@ public class chooseActivity extends Activity implements View.OnClickListener {
                     //Launches the new activity
                     Intent gameActivity = new Intent(chooseActivity.this, gameActivity.class);
                     gameActivity.putExtra("p1Avatar", avatarIDp1);
-                    System.out.println("avatar id before" + avatarIDp1);
                     gameActivity.putExtra("p2Avatar", avatarIDp2);
                     gameActivity.putExtra("p1OpenAvatar", p1OpenAvatar);
                     gameActivity.putExtra("p2OpenAvatar", p2OpenAvatar);

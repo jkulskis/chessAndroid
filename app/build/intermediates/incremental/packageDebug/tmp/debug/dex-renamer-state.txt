@@ -1,4 +1,4 @@
-#Tue Apr 30 23:32:14 EDT 2019
-base.0=C\:\\Users\\johnn\\Desktop\\Freshman Semester 2\\EC327\\chessAndroid\\app\\build\\intermediates\\dex\\debug\\mergeDexDebug\\out
+#Wed May 01 04:36:30 EDT 2019
+base.0=C\:\\Users\\jmiku\\AndroidStudioProjects\\Chess\\app\\build\\intermediates\\dex\\debug\\mergeDexDebug\\out
 path.0=classes.dex
 renamed.0=classes.dex
