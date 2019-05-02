@@ -3,15 +3,25 @@
 A chess app made to play on **one** device between friends. Chessmates implements a pass-and-play functionality which inverts the board so that the players can pass the phone between each other allowing the players to play side-by-side.
 
 * [<strong>CHESSMATES</strong>](#chessmates)
+
 * [<strong>Getting Started</strong>](#getting-started)
+
 		* [<strong>Prerequisities</strong>](#prerequisities)
+
 		* [<strong>Installing</strong>](#installing)
+
 * [<strong>Features</strong>](#features)
+
 		* [<strong>Avatar Selection</strong>](#avatar-selection)
+
 		* [<strong>Game Functionality</strong>](#game-functionality)
+
 			* [<strong>Pawn Promotion</strong>](#pawn-promotion)
+
 			* [<strong>Castling</strong>](#castling)
+
 			* [<strong>Move Highlighting</strong>](#move-highlighting)
+
 			* [<strong>Advanced Mode</strong>](#advanced-mode)
         
           
