@@ -376,10 +376,10 @@ public class MyCanvas extends View {
         if (victoryDance) {
             if (victoryXScalar + 3*verticalPadding/4 <= width && victoryXScalar >= 0) {
                 if (victoryDanceRight) {
-                    victoryXScalar += width/30;
+                    victoryXScalar += 0;
                 }
                 else {
-                    victoryXScalar -= width/30;
+                    victoryXScalar += 0;
                 }
             }
             else {

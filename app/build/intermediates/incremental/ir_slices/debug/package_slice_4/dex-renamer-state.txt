@@ -1,4 +1,0 @@
-#Tue Apr 30 19:54:51 EDT 2019
-base.0=C\:\\Users\\johnn\\Desktop\\Freshman Semester 2\\EC327\\chessAndroid\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\4
-path.0=classes.dex
-renamed.0=classes.dex
