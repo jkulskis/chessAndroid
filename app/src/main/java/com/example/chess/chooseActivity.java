@@ -34,6 +34,9 @@ public class chooseActivity extends Activity implements View.OnClickListener {
         width = getResources().getDisplayMetrics().widthPixels/3;
         height =  getResources().getDisplayMetrics().heightPixels/3;
 
+
+        // Set all ImageButtons and Views
+
         Stringhini = findViewById(R.id.avatarStringhini);
         Stringhini.setOnClickListener(this);
 
@@ -61,7 +64,8 @@ public class chooseActivity extends Activity implements View.OnClickListener {
         player1Select = true;
 
     }
-
+    // If an image is clicked, then set it based on if player1Select is true or not
+    // If player1Select is false, then set the image to player 2 and launch the game activity method
     public void onClick(View v) {
         switch (v.getId()) {
 
@@ -160,6 +164,8 @@ public class chooseActivity extends Activity implements View.OnClickListener {
         }
 
     }
+    // Creates a handler that puts a loading screen up for a few seconds
+    // and then launches the actual game activity
     private void launchGameActivity(final int rotation, boolean first)
     {
         if  (first) {

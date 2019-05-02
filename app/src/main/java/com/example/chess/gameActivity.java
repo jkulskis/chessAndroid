@@ -74,7 +74,6 @@ public class gameActivity extends Activity implements View.OnClickListener {
                     if (g.b.tiles[row][col].value != 0 && g.b.tiles[row][col].player == g.currentPlayer) {
                         if (g.b.selected == null || g.b.selected.col != col || g.b.selected.row != row) {
                             g.b.selected = g.b.tiles[row][col];
-    //                    System.out.println(g.b.selected.value);
                         }
                     // if selected is the clicked piece, then deselect it by setting
                     // selected to null
@@ -84,7 +83,6 @@ public class gameActivity extends Activity implements View.OnClickListener {
                     myCanvas.invalidate();
                 } else if (g.checkSelectMove(row, col)) {
                     pawnSelection = g.doTurn(g.b.selected.row, g.b.selected.col, row, col);
-                    System.out.println("P select " + pawnSelection);
                     if (pawnSelection != -1) {
                         pawnRow = row;
                         pawnCol = col;

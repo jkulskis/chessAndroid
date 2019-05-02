@@ -1,5 +1,6 @@
 package com.example.chess;
 
+// Empty class to use as a placeholder if there is no actual piece on the board
 public class Tile extends Piece{
     public Tile(int row, int col) {
         super(row, col);
