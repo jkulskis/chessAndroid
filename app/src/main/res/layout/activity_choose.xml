@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mainLayout"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:background="#4A0C21"
+    android:orientation="vertical"
+    android:weightSum="1">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#4A0C21"
+        android:orientation="horizontal"
+        >
+        <TextView
+            android:id="@+id/textChoose"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="0.75"
+            android:gravity="center"
+            android:text="Player 1: Choose an Avatar"
+            android:textColor="#FFFFFF"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/row1"
+        android:paddingBottom="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/avatarKrishna"
+            android:layout_width="0dp"
+            android:layout_height="185dp"
+            android:layout_weight="0.5"
+            android:background="#4A0C21"
+            android:scaleType="fitCenter"
+            android:src="@drawable/krishna" />
+
+        <ImageButton
+            android:id="@+id/avatarStringhini"
+            android:layout_width="0dp"
+            android:layout_height="185dp"
+            android:layout_weight="0.5"
+            android:background="#4A0C21"
+            android:scaleType="fitCenter"
+            android:src="@drawable/stringhini" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/row2"
+        android:background="#4A0C21"
+        android:layout_gravity="center"
+        android:paddingBottom="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/avatarJosh"
+            android:layout_width="0dp"
+            android:layout_height="185dp"
+            android:layout_weight="0.5"
+            android:background="#4A0C21"
+            android:scaleType="fitCenter"
+            android:src="@drawable/josh" />
+        <ImageButton
+            android:id="@+id/avatarBrown"
+            android:layout_width="0dp"
+            android:layout_height="185dp"
+            android:layout_weight="0.5"
+            android:background="#4A0C21"
+            android:scaleType="fitCenter"
+            android:src="@drawable/brown" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/row3"
+        android:background="#4A0C21"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/avatarJared"
+            android:layout_width="0dp"
+            android:layout_height="185dp"
+            android:layout_weight="0.5"
+            android:background="#4A0C21"
+            android:scaleType="fitCenter"
+            android:src="@drawable/jared" />
+        <ImageButton
+            android:id="@+id/avatarNatalie"
+            android:layout_width="0dp"
+            android:layout_height="180dp"
+            android:layout_weight="0.5"
+            android:background="#4A0C21"
+            android:scaleType="fitCenter"
+            android:src="@drawable/natalie" />
+    </LinearLayout>
+        <ImageView
+            android:background="#4A0C21"
+            android:id="@+id/loadingGif"
+            android:scaleType="fitCenter"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/loading"
+            android:visibility="gone"
+            />
+    <TextView
+        android:id="@+id/loadingText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Loading..."
+        android:textSize="40sp"
+        android:textColor="#FFFFFF"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:visibility="gone"
+         />
+
+</LinearLayout>

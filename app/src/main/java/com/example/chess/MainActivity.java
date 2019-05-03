@@ -1,66 +1,91 @@
 package com.example.chess;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
+
+import java.util.Scanner;
 
 public class MainActivity extends Activity implements View.OnClickListener {
 
-    private Button p1Move;
-    private Button p2Move;
-    private Button displayBoard;
-    private Button startGame;
+    private Button launchGame;
+    private TextView headerText;
+    private Switch switchAdvanced;
+    private Button launchInstructions;
+    public static boolean isAdvanced;
 
-    private TextView console;
+    Board b;
+    Player p0;
+    Player p1;
+    Game g;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        p1Move = (Button) findViewById(R.id.p1Move);
-        p1Move.setOnClickListener(this);
+        launchGame = (Button) findViewById(R.id.launchGame);
+        launchGame.setOnClickListener(this);
 
-        p2Move = (Button) findViewById(R.id.p2Move);
-        p2Move.setOnClickListener(this);
+        switchAdvanced = (Switch) findViewById(R.id.switchAdvanced);
+        switchAdvanced.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                isAdvanced = false;
+                if (isChecked) {
+                    isAdvanced = true;
+                }
 
-        displayBoard = (Button) findViewById(R.id.displayBoard);
-        displayBoard.setOnClickListener(this);
+            }
+        });
 
-        startGame = (Button) findViewById(R.id.startGame);
-        startGame.setOnClickListener(this);
-
-        console = (TextView) findViewById(R.id.console);
-        console.setOnClickListener(this);
+        headerText = (TextView) findViewById(R.id.mainText);
+        launchInstructions = (Button) findViewById(R.id.launchInstructions);
+        launchInstructions.setOnClickListener(this);
     }
 
     @Override
-    /*onClick is what is called when the buttons are pressed and they take in Views as arguments
-     * as buttons are children of the view class, buttons can polymorphically be passed in. The button
-     * that called the onClick is automatically fed in*/
     public void onClick(View v) {
 
         //The switch statements grab the id values of the button pressed and calculates the tip accordingly
         switch (v.getId()) {
 
-            case R.id.p1Move: {
-                console.setText("□□□□□□□□\n□□□□□□□□\n□□□□□□□□\n□□□□□□□□\n□□□□□□□□\n□□□□□□□□\n□□□□□□□□\n□□□□□□□□\n");
+            case R.id.launchGame: {
+                launchGameActivity();
                 break;
             }
-
-            case R.id.p2Move: {
-
-                break;
-            }
-
-            case R.id.displayBoard: {
-
+            case R.id.launchInstructions: {
+                launchInstructionsActivity();
                 break;
             }
         }
+    }
+
+    public void displayBoard() {
+        System.out.println(g.b.toString());
+    }
+
+    private void launchGameActivity()
+    {
+        Intent chooseActivity = new Intent(MainActivity.this, chooseActivity.class);
+
+        //Launches the new activity
+        startActivity(chooseActivity);
+    }
+
+    private void launchInstructionsActivity()
+    {
+        Intent Instruction = new Intent(MainActivity.this, Instruction.class);
+
+        //Launches the Instructions page
+        startActivity(Instruction);
     }
 }
 
