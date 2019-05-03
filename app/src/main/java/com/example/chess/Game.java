@@ -95,7 +95,6 @@ public class Game {
             return true;
         return false;
     }
-    // return the player ID if the type that reached the other side is a pawn
     public int checkPawnUpgrade(int r, int c) {
         if (b.tiles[r][c].type.equals("Pawn")) {
             return b.tiles[r][c].player.getId();

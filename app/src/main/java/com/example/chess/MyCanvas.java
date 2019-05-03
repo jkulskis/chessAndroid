@@ -372,14 +372,14 @@ public class MyCanvas extends View {
     }
     public void drawAvatar(Player player, Canvas canvas, boolean open, boolean victoryDance) {
 
-        // Victory dance stuff...didn't finish in time
+        // Victory dance stuff
         if (victoryDance) {
             if (victoryXScalar + 3*verticalPadding/4 <= width && victoryXScalar >= 0) {
                 if (victoryDanceRight) {
-                    victoryXScalar += 0;
+                    victoryXScalar += width/30;
                 }
                 else {
-                    victoryXScalar += 0;
+                    victoryXScalar -= width/30;
                 }
             }
             else {

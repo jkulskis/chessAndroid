@@ -18,6 +18,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private Button launchGame;
     private TextView headerText;
     private Switch switchAdvanced;
+    private Button launchInstructions;
     public static boolean isAdvanced;
 
     Board b;
@@ -46,6 +47,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
         });
 
         headerText = (TextView) findViewById(R.id.mainText);
+        launchInstructions = (Button) findViewById(R.id.launchInstructions);
+        launchInstructions.setOnClickListener(this);
     }
 
     @Override
@@ -56,6 +59,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
             case R.id.launchGame: {
                 launchGameActivity();
+                break;
+            }
+            case R.id.launchInstructions: {
+                launchInstructionsActivity();
                 break;
             }
         }
@@ -71,6 +78,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         //Launches the new activity
         startActivity(chooseActivity);
+    }
+
+    private void launchInstructionsActivity()
+    {
+        Intent Instruction = new Intent(MainActivity.this, Instruction.class);
+
+        //Launches the Instructions page
+        startActivity(Instruction);
     }
 }
 
